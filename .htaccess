@@ -1,0 +1,8 @@
+# htaccess file
+#########
+# To enable, uncommment everything below and change as needed.
+#########
+# AuthType Basic
+# AuthName "Cloudflare Updater - https://www.github.com/rslowe/cfupdate" # Change this to a message you want displayed.
+# AuthUserFile /path/to/htpasswd/file/.htpasswd
+# Require valid-user
