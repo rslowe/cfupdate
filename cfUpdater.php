@@ -1,18 +1,6 @@
 <?php
-// Update these values with your own information.
 
-$hosts = array(
-	"KEY_GOES_HERE" => "ENTER_EVERYTHING_BEFORE_THE_DOMAIN",
-);
-$apiKey       = "<CLOUDFLARE_GLOBAL_API_KEY>";                   // Your CloudFlare API Key.
-$myDomain     = "example.net";                                   // Your domain name.
-$emailAddress = "exampleemailaccount@example.net";               // The email address of your CloudFlare account.
-$v6v4ExclusiveModeEnable = FALSE;                                // Prevent ipv4 and ipv6 records from mixing.
-$v4OnlyPrefix = "ip4.";                                          // String (in domain) to ensure v4 only entry. (must end in .) (Only if $v6v4ExclusiveModeEnable = TRUE) 
-$v6OnlyPrefix = "ip6.";                                          // String (in domain) to ensure v6 only entry. (must end in .) (Only if $v6v4ExclusiveModeEnable = TRUE) 
-$baseUrl      = 'https://api.cloudflare.com/client/v4/';         // The URL for the CloudFlare API, Change if an Update is Pushed by CF.
-
-// The values below do not need to be changed.
+require_once('config.php');
 
 // Check the calling client has a valid auth key.
 if (empty($_GET['auth'])) {
@@ -88,7 +76,7 @@ if ($v6v4ExclusiveModeEnable) {
 	// Determine protocol version and set record type.
 	if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) && strpos($ddnsAddress, $v6OnlyPrefix) !== false) {
 		$type = 'AAAA';
-	} elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && strpos($ddnsAddress,  $v6OnlyPrefix) !== false) {
+	} elseif (strpos($ddnsAddress, $v4OnlyPrefix) !== false) {
 		$type = 'A';
 	} else{
 		header("HTTP/1.1 418 Teapot"); // Stupid Error. 
