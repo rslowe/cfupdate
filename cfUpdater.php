@@ -88,7 +88,7 @@ if ($v6v4ExclusiveModeEnable) {
 	// Determine protocol version and set record type.
 	if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) && strpos($ddnsAddress, $v6OnlyPrefix) !== false) {
 		$type = 'AAAA';
-	} elseif (strpos($ddnsAddress, $v4OnlyPrefix) !== false) {
+	} elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && strpos($ddnsAddress,  $v6OnlyPrefix) !== false) {
 		$type = 'A';
 	} else{
 		header("HTTP/1.1 418 Teapot"); // Stupid Error. 
