@@ -6,7 +6,7 @@ require_once('config.php');
 if (empty($_GET['auth'])) {
 	header("HTTP/1.1 401 Unauthorized");
 	die("notoken\n");
-} elseif (!array_key_exists($_GET['auth'], $hosts)) {
+} elseif (!is_string($_GET['auth']) || !array_key_exists($_GET['auth'], $hosts)) {
 	header("HTTP/1.1 403 Forbidden");
 	die("badtoken\n");
 }
@@ -24,20 +24,34 @@ if(empty($_GET['ip'])){ // If we don't have an IP in the Query String
 	$ip = $_SERVER['REMOTE_ADDR'];                    // The IP of the client calling the script.
 }
 else { // Allow the client to specify the IP in the Query String.
-	$ip = $_GET['ip'];
+	if (is_string($_GET['ip']) && filter_var($_GET['ip'], FILTER_VALIDATE_IP)){
+		$ip = $_GET['ip'];
+	}
+	else {
+		header("HTTP/1.1 400 Bad Request");
+		die("invalidip\n");
+	}
 }
 
 // Array with the headers needed for every request
-$headers = array(
-	"X-Auth-Email: ".$emailAddress,
-	"X-Auth-Key: ".$apiKey,
-	"Content-Type: application/json"
-);
+if ($useApiToken) {
+	$headers = array(
+		"Content-Type: application/json",
+		"Authorization: Bearer ".$apiToken
+	);
+}
+else {
+	$headers = array(
+		"X-Auth-Email: ".$emailAddress,
+		"X-Auth-Key: ".$apiKey,
+		"Content-Type: application/json"
+	);
+}
 // Sends request to CloudFlare and returns the response.
 function send_request($requestType) {
 	global $url, $fields, $headers;
 	$fields_string="";
-	if ($requestType == "POST" || $requestType == "PUT") {
+	if ($requestType === "POST" || $requestType === "PUT") {
 		$fields_string = json_encode($fields);
 	}
 	// Send the request to the CloudFlare API.
@@ -46,7 +60,7 @@ function send_request($requestType) {
 	curl_setopt($ch, CURLOPT_USERAGENT, "curl");
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $requestType);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-	if ($requestType == "POST" || $requestType == "PUT") {
+	if ($requestType === "POST" || $requestType === "PUT") {
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
 	}
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -72,17 +86,19 @@ function print_err_msg() {
 	}
 	die();
 }
+
 if ($v6v4ExclusiveModeEnable) {
 	// Determine protocol version and set record type.
 	if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) && strpos($ddnsAddress, $v6OnlyPrefix) !== false) {
 		$type = 'AAAA';
-	} elseif (strpos($ddnsAddress, $v4OnlyPrefix) !== false) {
+	} elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && strpos($ddnsAddress,  $v4OnlyPrefix) !== false) {
 		$type = 'A';
 	} else{
 		header("HTTP/1.1 418 Teapot"); // Stupid Error. 
 		die("IP Address Mismatch. ".$ip." not allowed to be used for ".$ddnsAddress."\n");
 	}
 }
+
 //Update $baseUrl
 $baseUrl .= 'zones';
 // Build the request to fetch the zone ID.
@@ -102,7 +118,7 @@ if ($data->success) {
 // Print error message if the request failed.
 } else {
     echo "Error while fetching zone.";
-	print_err_msg();
+    print_err_msg();
 }
 // Build the request to fetch the record ID.
 // https://api.cloudflare.com/#dns-records-for-a-zone-list-dns-records

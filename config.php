@@ -25,9 +25,11 @@
     );
 
     $apiKey       = "<CLOUDFLARE_GLOBAL_API_KEY>";                   // Your CloudFlare API Key.
+    $apiToken     = "<CLOUDFLARE_API_TOKEN_FOR_ZONE>";               // Cloudflare API Token (With Write Permissions to DNS Zone)
     $myDomain     = "example.net";                                   // Your domain name.
     $emailAddress = "exampleemailaccount@example.net";               // The email address of your CloudFlare account.
 
+    $useApiToken = FALSE;                                            // Use an API Token instead of the Global API Key.
     $v6v4ExclusiveModeEnable = FALSE;                                // Prevent ipv4 and ipv6 records from mixing.
     $v4OnlyPrefix = "ip4.";                                          // String (in domain) to ensure v4 only entry. (must end in .) (Only if $v6v4ExclusiveModeEnable = TRUE) 
     $v6OnlyPrefix = "ip6.";                                          // String (in domain) to ensure v6 only entry. (must end in .) (Only if $v6v4ExclusiveModeEnable = TRUE) 
