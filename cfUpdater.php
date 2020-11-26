@@ -160,7 +160,7 @@ if (!$rec_exists) {
 		print_err_msg();
 	}
 // Only update the entry if the IP addresses do not match.
-} elseif ($ip != $cfIP) {
+} elseif ($ip !== $cfIP) {
 	// Build the request to update the DNS record with our new IP.
 	// https://api.cloudflare.com/#dns-records-for-a-zone-update-dns-record
 	$fields = array(
