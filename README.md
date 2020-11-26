@@ -6,7 +6,7 @@ A fork of ScottHelme/CloudFlareDDNS, This project implements additional features
 ## Usage (Using Cloudflare's API Tokens) (Recommended because more Restrictive)
 1. Setup a PHP Compatible Server
 2. Register your domain with Cloudflare.
-3. Get your Cloudflare API Token from [here](https://dash.cloudflare.com/profile/api-tokens). (This token must be able to edit the Zone DNS for your domain, Go [here]() for more information.)
+3. Get your Cloudflare API Token from [here](https://dash.cloudflare.com/profile/api-tokens). (This token must be able to edit the Zone DNS for your domain, Go [here](Tokens.md) for more information.)
 4. Fill out the config.php file with your information. (Make sure "$useApiToken" is set to ```TRUE``` instead of the default ```FALSE```.)
 
 (For each updatable subdomain you want.)
