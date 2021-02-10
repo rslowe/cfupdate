@@ -32,7 +32,7 @@ A fork of ScottHelme/CloudFlareDDNS, This project implements additional features
 Hit the PHP file with a GET Request with at least one query string argument, "auth", which should contain the key as specified in the initial setup in the Usage section.
 If you wish to manually set the IP to a different one other than your IP, you may put a valid IP in another query string argument, "ip"
 
-For example: https://cfupdate.example.com/cfUpdater.php?auth=<KEYSTRING>&ip=198.51.100.1 is an example HTTP URL.
+For example: https://cfupdate.example.com/cfUpdater.php?auth=KEY_STRING&ip=198.51.100.1 is an example HTTP URL.
 
 
 ## Do I use this?
